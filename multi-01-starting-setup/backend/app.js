@@ -5,6 +5,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const cors = require('cors');
 
 const Goal = require('./models/goal');
 
@@ -19,15 +20,12 @@ app.use(morgan('combined', { stream: accessLogStream }));
 
 app.use(bodyParser.json());
 
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  next();
-});
+app.use(cors());
 
 app.get('/goals', async (req, res) => {
   console.log('TRYING TO FETCH GOALS');
+  console.log('EDITED');
+
   try {
     const goals = await Goal.find();
     res.status(200).json({
@@ -84,7 +82,7 @@ app.delete('/goals/:id', async (req, res) => {
 });
 
 mongoose.connect(
-  'mongodb://localhost:27017/course-goals',
+  'mongodb://mongodb:27017/course-goals',
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -95,7 +93,7 @@ mongoose.connect(
       console.error(err);
     } else {
       console.log('CONNECTED TO MONGODB');
-      app.listen(80);
+      app.listen(8000);
     }
   }
 );
